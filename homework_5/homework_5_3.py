@@ -19,6 +19,10 @@ for current_num in range(first_num, last_num+1):
         div_quantity = len(divisors)
 
     divisors_list.append(div_quantity)  # Write quantity of divisors to list
+
+    # Reverse lists to easily find max number with max divisors quantity
+    divisors_list.reverse()
+    num_range.reverse()
 max_index = divisors_list.index(max(divisors_list))  # Find index of first max element
 
-print(f"In range from {first_num} to {last_num} first number with maximum quantity of divisors is {num_range[max_index]}, with {divisors_list[max_index]} divisors")
+print(f"In range from {first_num} to {last_num} largest number with maximum quantity of divisors is {num_range[max_index]}, with {divisors_list[max_index]} divisors")
