@@ -1,5 +1,7 @@
 import string
 import secrets
+import os
+clear = lambda: os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def char_set():
@@ -7,7 +9,8 @@ def char_set():
     This function used to select password charset
     :return: string charset, str
     """
-    print("\nSelect one of these characters sets for your password:\n")
+    clear()
+    print("Select one of these characters sets for your password:\n")
     print("1 - lowercase letters")
     print("2 - lowercase and uppercase letters")
     print("3 - lowercase letters and digits")
@@ -50,6 +53,7 @@ def pass_size():
     Function for setting password size
     :return: number of characters for the new password, int
     """
+    clear()
     while True:
         try:
             size = input("Enter password length, minimum 4, or press Enter to exit: ")
@@ -94,9 +98,11 @@ def main():
     charset = char_set()
     pw = pass_gen(size, charset)
     while True:
+        clear()
         print(f"\nYour new password is \x1b[1;33m{pw}\x1b[0;37m\n")
         decision = confirm("Do you want to generate one more password? ")
         if decision == True:
+            clear()
             decision = confirm("Do you want to change password size? ")
             if decision == True:
                 size = pass_size()
