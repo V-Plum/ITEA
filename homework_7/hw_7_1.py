@@ -28,7 +28,7 @@ def char_set():
                 return string.ascii_letters + string.digits
             elif charset == "":
                 decision = confirm("Do you want to exit? ")
-                if decision == True:
+                if decision is True:
                     print("\nHave a nice day!\n")
                     exit()
             else:
@@ -59,7 +59,7 @@ def pass_size():
             size = input("Enter password length, minimum 4, or press Enter to exit: ")
             if size == "":
                 decision = confirm("Do you want to exit? ")
-                if decision == True:
+                if decision is True:
                     print("\nHave a nice day!\n")
                     exit()
                 else:
@@ -101,19 +101,19 @@ def main():
         clear()
         print(f"\nYour new password is \x1b[1;33m{pw}\x1b[0;37m\n")
         decision = confirm("Do you want to generate one more password? ")
-        if decision == True:
+        if decision is True:
             clear()
             decision = confirm("Do you want to change password size? ")
-            if decision == True:
+            if decision is True:
                 size = pass_size()
             decision = confirm("Do you want to select different charset? ")
-            if decision == True:
+            if decision is True:
                 charset = char_set()
         else:
             break
         pw = pass_gen(size, charset)
 
-    print("\nHave a nice day!\n")
+    print("\nKeep your passwords in a safe place!\n")
 
 
 if __name__ == '__main__':
