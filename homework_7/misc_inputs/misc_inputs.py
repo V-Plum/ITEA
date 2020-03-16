@@ -97,6 +97,11 @@ def int_enter(prompt, is_exit=False, allowed_min=None, allowed_max=None):
 
 
 def create_list(size=None):
+    """
+    Function to create lists of any size from string input
+    :param size: Prompt text
+    :return: list with string units
+    """
     global generated_list
     if size is None:
         size = int_enter("How many items do you want to add to your list? ")
