@@ -1,5 +1,7 @@
 import string
-char_set = string.printable
+ukr = "абвгґдеєжзиіїйклмнопрстуфхцчшщьюяАБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ"
+char_set = ukr + string.printable
+# print(char_set)
 
 
 def main():
