@@ -12,6 +12,8 @@ import string
 import PySimpleGUI as sg
 ukr = "абвгґдеєжзиіїйклмнопрстуфхцчшщьюяАБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ"
 char_set = string.ascii_letters + string.digits + string.punctuation + ukr + " "
+file_name = ""
+file_key = ""
 
 
 def main():
@@ -29,53 +31,124 @@ def main():
             exit()
         elif event is None:
             exit()
-
-        layout = [ [ sg.Text('Search or select to change') ],
+        names_list = create_names_list(file_decoded)
+        layout = [ [ sg.Text('Search is case sensitive:') ],
                    [ sg.Input(size=(40, 1), enable_events=True, key='-INPUT-') ],
-                   [ sg.Listbox(file_decoded[1:], size=(40, 10), enable_events=True, key='-LIST-') ],
-                   [ sg.Button('Add'), sg.Button('Exit') ] ]
+                   [sg.Text('Select to show password:') ],
+                   [ sg.Listbox(names_list[1:], size=(40, 10), enable_events=True, key='-LIST-') ],
+                   [ sg.Button('Add'), sg.Button('Save'), sg.Button('Exit') ] ]
 
         window = sg.Window('Passwords', layout)
         # Event Loop
         while True:
             event, values = window.read()
+            # if a list item is chosen
+            if event == '-LIST-' and len(values[ '-LIST-' ]):
+                index = (window[event].GetIndexes()[0])+1
+                item = file_decoded[index]
+                modified = modify_item(item)
+                file_decoded[index] = modified
+                names_list = create_names_list(file_decoded)
+                window[ '-LIST-' ].update(names_list[1:])
             if event in (None, 'Exit'):  # always check for closed window
                 break
+            if event == 'Save':
+                encrypt_and_save(file_decoded)
             if values[ '-INPUT-' ] != '':  # if a keystroke entered in search field
                 search = values[ '-INPUT-' ]
-                new_values = [ x for x in file_decoded[1:] if search in x ]  # do the filtering
+                new_values = [ x for x in names_list[1:] if search in x ]  # do the filtering
                 window[ '-LIST-' ].update(new_values)  # display in the listbox
             else:
                 # display original unfiltered list
-                window[ '-LIST-' ].update(file_decoded[1:])
-            # if a list item is chosen
-            if event == '-LIST-' and len(values[ '-LIST-' ]):
-                sg.popup('Selected ', values[ '-LIST-' ])
+                window[ '-LIST-' ].update(names_list[1:])
         window.close()
 
 
+def modify_item(item):
+    new_item = ["0","1"]
+    layout = [[ sg.Text('Service name:') ],
+              [ sg.InputText(item[0],size=(40, 1), key=0) ],
+              [ sg.Text('Password:') ],
+              [ sg.InputText(item[1],size=(40, 1), key=1) ],
+            [ sg.Button('Change'), sg.Button('Close') ] ]
+    window = sg.Window(f'{item[0]} Password', layout)
+    while True:
+        event, values = window.read()
+        if event in (None, "Close"):
+            window.close()
+            return item
+        if event == 'Change':
+            new_item[0] =  values[0]
+            new_item[1] =  values[1]
+            if not new_item[0] or not new_item[1]:
+                sg.Popup('Fields can not be empty')
+                continue
+            window.close()
+            return new_item
+
+
+def encrypt_and_save(decoded_file):
+    global file_key
+    file_encoded = [ ]
+    layout = [ [ sg.Text('Please enter a new key to encrypt the file'), sg.InputText(file_key) ],
+               [ sg.Button('Ok', bind_return_key=True), sg.Button('Cancel') ] ]
+    window = sg.Window("Encrypt and save file", layout)
+    while True:
+        event, values = window.read()
+        if event in (None, "Cancel"):
+            sg.Popup("File NOT saved")
+            window.close()
+            return
+        if event == 'Ok' or event.startswith('Enter'):
+            new_file_key = values[0]
+            if new_file_key:
+                file_key = new_file_key
+                window.close()
+                sg.Popup("File saved")
+                break
+            else:
+                sg.Popup('Key is wrong')
+
+    for counter in range(len(decoded_file)):
+        line_to_encode = " / ".join(decoded_file[counter])
+        key_word = file_key
+        while len(key_word) < len(line_to_encode):
+            key_word = key_word + file_key
+        key_word = key_word[ :len(line_to_encode) ]
+        encoded_line = encode(line_to_encode, key_word)
+        file_encoded.append(encoded_line)
+    with open(file_name, 'w+') as f:
+        f.write('\n'.join(file_encoded))
+
+
+def create_names_list(file_decoded):
+    names_list = [ item[ 0 ] for item in file_decoded ]
+    return names_list
+
+
 def open_create_file():
+    global file_key
+    file_decoded = [ ]
     file = open_file()
     file_content = file.read().splitlines()
     if file_content:
         check = (file_content[ 0 ])
-        key = get_file_key(check)
-        file_decoded = [ ]
+        file_key = get_file_key(check)
         for counter in range(len(file_content)):
-            key_word = key
+            key_word = file_key
             while len(key_word) < len(file_content[ counter ]):
-                key_word = key_word + key
+                key_word = key_word + file_key
             key_word = key_word[ :len(file_content[ counter ]) ]
             decoded_line = decode(file_content[ counter ], key_word)
             decoded_line = decoded_line.split(" / ")
             file_decoded.append(decoded_line)
     elif not file_content:
-        file_decoded = ["decoded"]
-    print(file_decoded)
+        file_decoded = [["decoded"]]
     return file_decoded
 
 
 def get_file_key(check):
+    global file_key
     layout = [ [ sg.Text('Please enter a key to decrypt the file'), sg.InputText() ],
                [ sg.Button('Ok', bind_return_key=True), sg.Button('Cancel') ] ]
     window = sg.Window("Decrypt file", layout)
@@ -84,20 +157,21 @@ def get_file_key(check):
         if event in (None, "Cancel"):
             return
         if event == 'Ok' or event.startswith('Enter'):
-            key = values[0]
-            key_word = key
+            file_key = values[0]
+            key_word = file_key
             while len(key_word) < len(check):
-                key_word = key_word + key
+                key_word = key_word + file_key
             key_word = key_word[:len(check)]
             checked = decode(check, key_word)
             if checked == "decoded":
                 window.close()
-                return key
+                return file_key
             else:
                 sg.Popup('Key is wrong')
 
 
 def open_file():
+    global file_name
     while True:
         file_name = sg.PopupGetFile('Please enter a file name')
         if not file_name:
