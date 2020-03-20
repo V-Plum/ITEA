@@ -11,7 +11,7 @@ $ pip install PySimpleGUI
 import string
 import PySimpleGUI as sg
 ukr = "абвгґдеєжзиіїйклмнопрстуфхцчшщьюяАБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ"
-char_set = ukr + string.ascii_letters + string.digits + string.punctuation + " "
+char_set = string.ascii_letters + string.digits + string.punctuation + ukr + " "
 
 
 def main():
@@ -21,37 +21,77 @@ def main():
     window = sg.Window('Choose scenario', layout)
     while True:
         event, values = window.read()
+        window.close()
         if event == 'File':
-            window.close()
-            file = open_file()
-            check = file.readline()
-            if check:
-                key = get_file_key(check)
-            elif not check:
-                file_content = "decoded\n"
+            file_decoded = open_create_file()
         elif event == 'Text':
-            window.close()
             encryption()
+            exit()
         elif event is None:
             exit()
+
+        layout = [ [ sg.Text('Search or select to change') ],
+                   [ sg.Input(size=(40, 1), enable_events=True, key='-INPUT-') ],
+                   [ sg.Listbox(file_decoded[1:], size=(40, 10), enable_events=True, key='-LIST-') ],
+                   [ sg.Button('Add'), sg.Button('Exit') ] ]
+
+        window = sg.Window('Passwords', layout)
+        # Event Loop
+        while True:
+            event, values = window.read()
+            if event in (None, 'Exit'):  # always check for closed window
+                break
+            if values[ '-INPUT-' ] != '':  # if a keystroke entered in search field
+                search = values[ '-INPUT-' ]
+                new_values = [ x for x in file_decoded[1:] if search in x ]  # do the filtering
+                window[ '-LIST-' ].update(new_values)  # display in the listbox
+            else:
+                # display original unfiltered list
+                window[ '-LIST-' ].update(file_decoded[1:])
+            # if a list item is chosen
+            if event == '-LIST-' and len(values[ '-LIST-' ]):
+                sg.popup('Selected ', values[ '-LIST-' ])
+        window.close()
+
+
+def open_create_file():
+    file = open_file()
+    file_content = file.read().splitlines()
+    if file_content:
+        check = (file_content[ 0 ])
+        key = get_file_key(check)
+        file_decoded = [ ]
+        for counter in range(len(file_content)):
+            key_word = key
+            while len(key_word) < len(file_content[ counter ]):
+                key_word = key_word + key
+            key_word = key_word[ :len(file_content[ counter ]) ]
+            decoded_line = decode(file_content[ counter ], key_word)
+            decoded_line = decoded_line.split(" / ")
+            file_decoded.append(decoded_line)
+    elif not file_content:
+        file_decoded = ["decoded"]
+    print(file_decoded)
+    return file_decoded
 
 
 def get_file_key(check):
     layout = [ [ sg.Text('Please enter a key to decrypt the file'), sg.InputText() ],
-               [ sg.Button('Ok'), sg.Button('Cancel') ] ]
+               [ sg.Button('Ok', bind_return_key=True), sg.Button('Cancel') ] ]
     window = sg.Window("Decrypt file", layout)
     while True:
         event, values = window.read()
         if event in (None, "Cancel"):
             return
-        if event == 'Ok':
+        if event == 'Ok' or event.startswith('Enter'):
             key = values[0]
-            while len(key) < len(check):
-                key = key + key
-            key = key[:len(check)]
-            checked = decode(check, key)
-            print(checked)
+            key_word = key
+            while len(key_word) < len(check):
+                key_word = key_word + key
+            key_word = key_word[:len(check)]
+            checked = decode(check, key_word)
             if checked == "decoded":
+                window.close()
                 return key
             else:
                 sg.Popup('Key is wrong')
@@ -128,6 +168,8 @@ def decode(text, key):
         char_row = char_set[key_sym_index:] + char_set[:key_sym_index]
         to_decode_sym_index = char_row.find(text[i])
         done_sym = char_set[to_decode_sym_index]
+        # print(i)
+        # print(done_sym)
         decoded = decoded + done_sym
     return decoded
 
