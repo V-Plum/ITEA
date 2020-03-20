@@ -11,24 +11,83 @@ $ pip install PySimpleGUI
 import string
 import PySimpleGUI as sg
 ukr = "абвгґдеєжзиіїйклмнопрстуфхцчшщьюяАБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ"
-char_set = ukr + string.printable
+char_set = ukr + string.ascii_letters + string.digits + string.punctuation + " "
 
 
 def main():
-    layout = [ [ sg.Text('Enter text to code'), sg.InputText() ],
-               [ sg.Text('Enter key'), sg.InputText() ],
-               [ sg.Radio('Encode', "RADIO1", default=True, size=(10, 1)), sg.Radio('Decode', "RADIO1") ],
-               [ sg.Button('Ok'), sg.Button('Cancel') ] ]
+    layout = [[sg.Text('Do you want to work with file or with text?')],
+               [sg.Button('File'), sg.Button('Text')]]
 
+    window = sg.Window('Choose scenario', layout)
+    while True:
+        event, values = window.read()
+        if event == 'File':
+            window.close()
+            file = open_file()
+            check = file.readline()
+            if check:
+                key = get_file_key(check)
+            elif not check:
+                file_content = "decoded\n"
+        elif event == 'Text':
+            window.close()
+            encryption()
+        elif event is None:
+            exit()
+
+
+def get_file_key(check):
+    layout = [ [ sg.Text('Please enter a key to decrypt the file'), sg.InputText() ],
+               [ sg.Button('Ok'), sg.Button('Cancel') ] ]
+    window = sg.Window("Decrypt file", layout)
+    while True:
+        event, values = window.read()
+        if event in (None, "Cancel"):
+            return
+        if event == 'Ok':
+            key = values[0]
+            while len(key) < len(check):
+                key = key + key
+            key = key[:len(check)]
+            checked = decode(check, key)
+            print(checked)
+            if checked == "decoded":
+                return key
+            else:
+                sg.Popup('Key is wrong')
+
+
+def open_file():
+    while True:
+        file_name = sg.PopupGetFile('Please enter a file name')
+        if not file_name:
+            exit()
+        try:
+            file = open(file_name, "r+")
+            return file
+        except FileNotFoundError:
+            create = sg.PopupYesNo(f'File {file_name} not found. Do you want to create it?')
+            if create == "Yes":
+                file = open(file_name, "w+")
+                return file
+            elif create in (None, "No"):
+                continue
+
+
+def encryption():
+    layout = [[sg.Text('Enter text to code'), sg.InputText()],
+               [sg.Text('Enter key'), sg.InputText()],
+               [sg.Radio('Encode', "RADIO1", default=True, size=(10, 1)), sg.Radio('Decode', "RADIO1")],
+               [sg.Button('Ok'), sg.Button('Cancel')]]
     window = sg.Window('Encrypt your text!', layout)
     while True:
         event, values = window.read()
-        if event in (None, 'Cancel'):  # if user closes window or clicks cancel
+        if event in (None, 'Cancel'):
             exit()
-        if event in ('Ok'):
-            to_code = values[ 0 ]
-            key = values[ 1 ]
-            direction = values[ 2 ]
+        if event is 'Ok':
+            to_code = values[0]
+            key = values[1]
+            direction = values[2]
             window.close()
             break
 
@@ -40,15 +99,13 @@ def main():
     elif not direction:
         result = decode(to_code, key)
 
-    layout = [ [ sg.Text('Resulting text is:')],
-               [ sg.InputText(result)],
-               [ sg.Button('Close') ] ]
-    # Create the Window
+    layout = [[sg.Text('Resulting text is:')],
+               [sg.InputText(result)],
+               [sg.Button('Close')]]
     window = sg.Window('Vigenere result', layout)
-    # Event Loop to process "events" and get the "values" of the inputs
     while True:
         event, values = window.read()
-        if event in (None, 'Close'):	# if user closes window or clicks cancel
+        if event in (None, 'Close'):
             break
     window.close()
 
