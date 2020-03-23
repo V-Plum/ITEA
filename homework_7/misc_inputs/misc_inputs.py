@@ -103,6 +103,7 @@ def create_list(size=None):
     :return: list with string units
     """
     global generated_list
+    generated_list = []
     if size is None:
         size = int_enter("How many items do you want to add to your list? ")
     for i in range(size):
