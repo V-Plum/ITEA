@@ -1,9 +1,3 @@
-"""
-У введеному реченні змінити регістр всіх букв. Наприклад:
-рядок “I`m eaTinG BaNaNa.” має бути конвертований у “i`M EAtINg bAnAnA.”
-
-"""
-
 def change_case(in_text):
     out_text = ""
     for i in range(len(in_text)-1):
