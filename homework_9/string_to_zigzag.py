@@ -23,9 +23,12 @@ def string_to_zigzag(text, rows):
             row -= 1
         else:
             row += 1
-    for i in range(rows):
-        matrix[i] = "".join(matrix[i])
-    new_string = "".join(map(str, matrix.values()))
+
+    # for i in range(rows):
+    #     matrix[i] = "".join(matrix[i])
+    # new_string = "".join(map(str, matrix.values()))
+
+    new_string = "".join(sum(matrix.values(), []))
     return new_string
 
 
