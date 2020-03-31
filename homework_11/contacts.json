@@ -1,0 +1,98 @@
+{
+  "1": {
+    "country": "Country1",
+    "city": "City1",
+    "street": "Street1",
+    "building": 1,
+    "apartment": 11,
+    "zip_code": 1010101
+  },
+  "2": {
+    "country": "Country2",
+    "city": "City2",
+    "street": "Street2",
+    "building": 2,
+    "apartment": 22,
+    "zip_code": null
+  },
+  "3": {
+    "country": "Country3",
+    "city": "City3",
+    "street": "Street3",
+    "building": 3,
+    "apartment": null,
+    "zip_code": null
+  },
+  "4": {
+    "country": "Country4",
+    "city": "City4",
+    "street": "Street4",
+    "building": null,
+    "apartment": null,
+    "zip_code": null
+  },
+  "5": {
+    "country": "Country5",
+    "city": "City5",
+    "street": null,
+    "building": null,
+    "apartment": null,
+    "zip_code": null
+  },
+  "6": {
+    "country": "Country4",
+    "city": null,
+    "street": null,
+    "building": null,
+    "apartment": null,
+    "zip_code": null
+  },
+  "7": {
+    "country": null,
+    "city": null,
+    "street": null,
+    "building": null,
+    "apartment": null,
+    "zip_code": null
+  },
+  "8": {
+    "country": null,
+    "city": null,
+    "street": null,
+    "building": null,
+    "apartment": null,
+    "zip_code": 123456
+  },
+  "9": {
+    "country": null,
+    "city": null,
+    "street": null,
+    "building": null,
+    "apartment": 99,
+    "zip_code": null
+  },
+  "10": {
+    "country": null,
+    "city": null,
+    "street": null,
+    "building": 10,
+    "apartment": null,
+    "zip_code": null
+  },
+  "11": {
+    "country": "Country11",
+    "city": null,
+    "street": null,
+    "building": null,
+    "apartment": null,
+    "zip_code": null
+  },
+  "12": {
+    "country": null,
+    "city": "City12",
+    "street": null,
+    "building": null,
+    "apartment": null,
+    "zip_code": null
+  }
+}
