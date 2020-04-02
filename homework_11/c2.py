@@ -38,9 +38,13 @@ class Notebook():
         with open(file, "r") as f:
             file_data = json.load(f)
         for key in file_data:
-            temp = file_data[key]
-            for key2 in temp:
-                contact_list.append(Contact(exec(key2 + "=temp[key2]")))
+            contact_list.append(Contact(
+                name=file_data[key]['name'],
+                second_name=file_data[key]['second_name'],
+                street=file_data[key]['street'],
+                building=file_data[key]['building'],
+                mobile_phone=file_data[key]['mobile_phone'])
+            )
         return contact_list
 
 
