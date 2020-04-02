@@ -54,26 +54,16 @@ class Contact(Address, Person):
         self.mobile_number = mobile_number
         self.home_number = home_number
         self.work_number = work_number
-        self.name = name
-        self.second_name = second_name
-        self.comment = comment
-        self.born = born
-        self.country = country
-        self.city = city
-        self.street = street
-        self.building = building
-        self.apartment = apartment
-        self.zip_code = zip_code
         self.full_address = Address.address(self)
 
 
-class Notebook(Contact):
-    def __init__(self):
+class Notebook():
+    def __init__(self, file = None):
         super().__init__()
 
-    def read_contacts_to_arr(file):
+    def read_contacts_to_arr(self):
         contact_list = []
-        with open(file, "r") as f:
+        with open(self, "r") as f:
             file_data = json.load(f)
         for key in file_data:
             contact_list.append(Contact(
@@ -91,7 +81,8 @@ class Notebook(Contact):
 
 def main():
     file = "contacts.json"
-    contact_list = Notebook.read_contacts_to_arr(file)
+    notebook = Notebook(file=file)
+    contact_list = notebook.read_contacts_to_arr()
     for i in range(len(contact_list)):
         # print(contact_list[i].street, contact_list[i].building)
         print(contact_list[i].full_name, contact_list[i].full_address)

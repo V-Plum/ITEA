@@ -1,0 +1,17 @@
+{
+  "John Smith": {
+    "name": "John",
+    "second_name": "Smith",
+    "city": "City1",
+    "street": "Street1",
+    "building": 1,
+    "mobile_phone": 123456789
+  },
+  "James Bond": {
+    "name": "James",
+    "second_name": "Bond",
+    "street": "Street2",
+    "building": 2,
+    "mobile_phone": 987654321
+  }
+}
