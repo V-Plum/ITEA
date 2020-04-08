@@ -24,16 +24,16 @@ def open_file_dialog(path):
 
 def create_buttons_set(num):
     add_tooltip = "Click to add selected tracks from left panel"
-    rm_tooltip = "Click to remove track from this section of playlist"
-    up_tooltip = "Click to move track up"
-    down_tooltip = "Click to move track down"
+    rm_tooltip = "Click to remove selected track from this section of playlist"
+    up_tooltip = "Click to move selected track up"
+    down_tooltip = "Click to move selected track down"
     shuffle_tooltip = "Click to shuffle this section of playlist"
     button = [
-        [sg.Button(">>", key=("add" + str(num)), tooltip=add_tooltip)],
-        [sg.Button("X", key=("rm" + str(num)), tooltip=rm_tooltip)],
-        [sg.Button("∧", key=("up" + str(num)), tooltip=up_tooltip)],
-        [sg.Button("∨", key=("dn" + str(num)), tooltip=down_tooltip)],
-        [sg.Button("Shuffle", key=("sh" + str(num)), tooltip=shuffle_tooltip)]
+        [sg.Button(" > ", key=("add" + str(num)), tooltip=add_tooltip)],
+        [sg.Button(" X ", key=("rm" + str(num)), tooltip=rm_tooltip)],
+        [sg.Button(" ∧ ", key=("up" + str(num)), tooltip=up_tooltip)],
+        [sg.Button(" ∨ ", key=("dn" + str(num)), tooltip=down_tooltip)],
+        [sg.Button(" ⤨ ", key=("sh" + str(num)), tooltip=shuffle_tooltip)]
     ]
     return button
 
