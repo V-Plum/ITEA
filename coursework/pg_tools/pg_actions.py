@@ -48,6 +48,8 @@ def load_state():
             files.pop(i)
     else:
         files = dict()
+    if not files:
+        files = dict()
     return settings, files, missing_files
 
 
@@ -73,7 +75,10 @@ def load_single_file(src, destination="./temp/"):
     if not os.path.isdir(destination):
         os.mkdir(destination)
     if src.lower().endswith('.mp3'):
-        shutil.copy(src, destination)
+        try:
+            shutil.copy(src, destination)
+        except shutil.SameFileError:
+            return "File exists"
         file_name = os.path.basename(src)
         audio = MP3(src)
         file_length = audio.info.length
@@ -109,23 +114,23 @@ def calculate_playlist_duration(working_list_of_files, pl1, pl2, pl3, pl4, pl5):
     return duration
 
 
-def remove_from_pls(missing_files, pl1, pl2, pl3, pl4, pl5):
-    for file in missing_files:
+def remove_from_pls(delete_files, pl1, pl2, pl3, pl4, pl5):
+    for file in delete_files:
         for i in range(len(pl1)):
-            if file == pl1[i - 1]:
-                pl1.pop(i - 1)
+            if file in pl1:
+                pl1.remove(file)
         for i in range(len(pl2)):
-            if file == pl2[i - 1]:
-                pl2.pop(i - 1)
+            if file in pl2:
+                pl2.remove(file)
         for i in range(len(pl3)):
-            if file == pl3[i - 1]:
-                pl3.pop(i - 1)
+            if file in pl3:
+                pl3.remove(file)
         for i in range(len(pl4)):
-            if file == pl4[i - 1]:
-                pl4.pop(i - 1)
+            if file in pl4:
+                pl4.remove(file)
         for i in range(len(pl5)):
-            if file == pl5[i - 1]:
-                pl5.pop(i - 1)
+            if file in pl4:
+                pl4.remove(file)
     return pl1, pl2, pl3, pl4, pl5
 
 

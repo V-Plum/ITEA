@@ -11,14 +11,14 @@ def open_folder_dialog(prompt, path):
     return folder
 
 
-def open_file_dialog():
+def open_file_dialog(path):
     file = sg.popup_get_file("Select file to import",
                              title="Import File",
                              default_extension="mp3",
                              save_as=False,
                              file_types=(('MP3 Files', '*.mp3'),),
                              no_window=False,
-                             initial_folder=None)
+                             initial_folder=path)
     return file
 
 

@@ -8,6 +8,8 @@ def main():
     settings, files_list, missing_files = pg_actions.load_state()
     path = settings["path"]
     pl1, pl2, pl3, pl4, pl5 = settings["pl1"], settings["pl2"], settings["pl3"], settings["pl4"], settings["pl5"]
+    if not files_list:
+        files_list = dict()
     if len(missing_files) > 0:
         sg.popup(f"{len(missing_files)} file(s) were removed from disk since last run")
     pl1, pl2, pl3, pl4, pl5 = pg_actions.remove_from_pls(missing_files, pl1, pl2, pl3, pl4, pl5)
@@ -30,7 +32,8 @@ def main():
     for i in range(1, 6):
         item = pg_ui.create_layout_item(i, locals()["pl"+str(i)])
         playlists_layout.append(item)
-    playlists_layout.append([sg.Text(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.", key="pld")])
+    playlists_layout.append([sg.Text(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.",
+                                     key="pld")])
 
     # Switch to this layout to work wit PySimpleGUI instead of PySimpleGUIQt
     # for i in range(1, 6):
@@ -65,15 +68,31 @@ def main():
                 sg.popup("Destination path cannot be empty")
                 continue
             path = path1
-            files_list = pg_actions.load_files_from_dir(src, path)
+            new_files_list = pg_actions.load_files_from_dir(src, path)
+            files_list.update(new_files_list)
             file_names = sorted(list(files_list.keys()))
             src_dur = 0
             for key in files_list:
                 src_dur += files_list[key][0]
             window['-LIST-'].update(file_names)
             window['td'].update(f"Total files duration: {src_dur // 60} min. {src_dur - (src_dur // 60) * 60} sec.")
-            settings = {"path": path, "pl1": pl1, "pl2": pl2, "pl3": pl3, "pl4": pl4, "pl5": pl5}
-            pg_actions.save_state(files_list, settings)
+
+        elif event == "Add File":
+            src = pg_ui.open_file_dialog(path)
+            if not src:
+                sg.popup("Source path cannot be empty")
+                continue
+            new_file = pg_actions.load_single_file(src, path)
+            if new_file == "File exists":
+                sg.popup(f"File with the same name exists in destination folder {path}. Delete it and try again")
+                continue
+            files_list.update(new_file)
+            file_names = sorted(list(files_list.keys()))
+            src_dur = 0
+            for key in files_list:
+                src_dur += files_list[key][0]
+            window['-LIST-'].update(file_names)
+            window['td'].update(f"Total files duration: {src_dur // 60} min. {src_dur - (src_dur // 60) * 60} sec.")
 
         # Save all playlist sections to one playlist.m3u file
 
@@ -85,35 +104,35 @@ def main():
         # It removes FIRST track with selected name from the section,
         # because .GetIndexes() method temporary doesn't work with PySimpleGUIQt
 
-        elif event == "rm1":
+        elif event == "rm1" and values["pl1"]:
             track = values["pl1"][0]
             if track:
                 pl1.remove(track)
             pl_dur -= files_list[track][0]
             window['pl1'].update(pl1)
             window['pld'].update(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.")
-        elif event == "rm2":
+        elif event == "rm2" and values["pl2"]:
             track = values["pl2"][0]
             if track:
                 pl2.remove(track)
             pl_dur -= files_list[track][0]
             window['pl2'].update(pl2)
             window['pld'].update(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.")
-        elif event == "rm3":
+        elif event == "rm3" and values["pl3"]:
             track = values["pl3"][0]
             if track:
                 pl3.remove(track)
             pl_dur -= files_list[track][0]
             window['pl3'].update(pl3)
             window['pld'].update(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.")
-        elif event == "rm4":
+        elif event == "rm4" and values["pl4"]:
             track = values["pl4"][0]
             if track:
                 pl4.remove(track)
             pl_dur -= files_list[track][0]
             window['pl4'].update(pl4)
             window['pld'].update(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.")
-        elif event == "rm5":
+        elif event == "rm5" and values["pl5"]:
             track = values["pl5"][0]
             if track:
                 pl5.remove(track)
@@ -123,35 +142,35 @@ def main():
 
         # Add items to playlist sections:
 
-        elif event == "add1":
+        elif event == "add1" and values['-LIST-']:
             tracks = values['-LIST-']
             for track in tracks:
                 pl1.append(track)
                 pl_dur += files_list[track][0]
             window['pl1'].update(pl1)
             window['pld'].update(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.")
-        elif event == "add2":
+        elif event == "add2" and values['-LIST-']:
             tracks = values['-LIST-']
             for track in tracks:
                 pl2.append(track)
                 pl_dur += files_list[track][0]
             window['pl2'].update(pl2)
             window['pld'].update(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.")
-        elif event == "add3":
+        elif event == "add3" and values['-LIST-']:
             tracks = values['-LIST-']
             for track in tracks:
                 pl3.append(track)
                 pl_dur += files_list[track][0]
             window['pl3'].update(pl3)
             window['pld'].update(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.")
-        elif event == "add4":
+        elif event == "add4" and values['-LIST-']:
             tracks = values['-LIST-']
             for track in tracks:
                 pl4.append(track)
                 pl_dur += files_list[track][0]
             window['pl4'].update(pl4)
             window['pld'].update(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.")
-        elif event == "add5":
+        elif event == "add5" and values['-LIST-']:
             tracks = values['-LIST-']
             for track in tracks:
                 pl5.append(track)
@@ -192,8 +211,10 @@ def main():
             window['pl5'].update(pl5)
 
         # Remove items from source section, optionally delete files:
+        elif event == "Delete Files" and not values['-LIST-']:
+            sg.popup("Select files in left panel first")
 
-        elif event == "Delete Files":
+        elif event == "Delete Files" and values['-LIST-']:
             tracks = values['-LIST-']
             decision = sg.popup_yes_no(f"Remove {len(tracks)} files from working list?")
             if decision == "Yes":
