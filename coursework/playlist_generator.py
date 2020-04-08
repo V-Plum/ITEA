@@ -17,50 +17,27 @@ def main():
         src_dur += files_list[key][0]
     file_names = sorted(list(files_list.keys()))
 
-    menu_def = [['&Edit', ['Remove Item', 'Move &UP', 'Move &DOWN']], ['&Help', '&About...'], ]
+    menu_def = [['&Help', ['&About']]]
 
     all_files_layout = [
         [sg.Listbox(file_names, enable_events=False, key='-LIST-', size=(40, 22), select_mode="multiple")],
         [sg.Text(f"Total files duration: {src_dur//60} min. {src_dur-(src_dur//60)*60} sec.",
                  key="td")]
     ]
+    playlists_layout = list()
 
-    add_tooltip = "Click to add selected tracks from left panel"
-    rm_tooltip = "Click to remove track from this section of playlist"
-    up_tooltip = "Click to move track up"
-    down_tooltip = "Click to move track down"
-    shuffle_tooltip = "Click to shuffle this section of playlist"
-
-    namespace = globals()
+    # Use this layout for PySimpleGUIQt
     for i in range(1, 6):
-        namespace['butt_lo%d' % i] = [
-            [sg.Button(">>", key=("add"+str(i)), tooltip=add_tooltip)],
-            [sg.Button("X", key=("rm"+str(i)), tooltip=rm_tooltip)],
-            [sg.Button("∧", key=("up"+str(i)), tooltip=up_tooltip)],
-            [sg.Button("∨", key=("dn"+str(i)), tooltip=down_tooltip)],
-            [sg.Button("Shuffle", key=("sh"+str(i)), tooltip=shuffle_tooltip)]
-        ]
-
-    playlists_layout = [
-        [sg.Column(butt_lo1), sg.Listbox(pl1, key='pl1', size=(40, 4.38), select_mode="single")],
-        [sg.Column(butt_lo2), sg.Listbox(pl2, key='pl2', size=(40, 4.38), select_mode="single")],
-        [sg.Column(butt_lo3), sg.Listbox(pl3, key='pl3', size=(40, 4.38), select_mode="single")],
-        [sg.Column(butt_lo4), sg.Listbox(pl4, key='pl4', size=(40, 4.38), select_mode="single")],
-        [sg.Column(butt_lo5), sg.Listbox(pl5, key='pl5', size=(40, 4.38), select_mode="single")],
-        [sg.Text(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.",
-                 key="pld")]
-    ]
+        item = pg_ui.create_layout_item(i, locals()["pl"+str(i)])
+        playlists_layout.append(item)
+    playlists_layout.append([sg.Text(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.", key="pld")])
 
     # Switch to this layout to work wit PySimpleGUI instead of PySimpleGUIQt
-    # playlists_layout = [
-    #     [sg.Column(butt_lo1), sg.Listbox(pl1, key='pl1', size=(40, 10), select_mode="single")],
-    #     [sg.Column(butt_lo2), sg.Listbox(pl2, key='pl2', size=(40, 10), select_mode="multiple")],
-    #     [sg.Column(butt_lo3), sg.Listbox(pl3, key='pl3', size=(40, 10), select_mode="multiple")],
-    #     [sg.Column(butt_lo4), sg.Listbox(pl4, key='pl4', size=(40, 10), select_mode="multiple")],
-    #     [sg.Column(butt_lo5), sg.Listbox(pl5, key='pl5', size=(40, 10), select_mode="multiple")],
-    #     [sg.Text(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.",
-    #              key="pld")]
-    # ]
+    # for i in range(1, 6):
+    #     item = pg_ui.create_layout_item(i, locals()["pl"+str(i)], (40, 10))
+    #     playlists_layout.append(item)
+    # playlists_layout.append([sg.Text(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.",
+    #                                  key="pld")])
 
     layout = [
         [sg.Menu(menu_def, tearoff=False, pad=(200, 1))],
