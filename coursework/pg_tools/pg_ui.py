@@ -22,6 +22,27 @@ def open_file_dialog():
     return file
 
 
+def create_buttons_set(num):
+    add_tooltip = "Click to add selected tracks from left panel"
+    rm_tooltip = "Click to remove track from this section of playlist"
+    up_tooltip = "Click to move track up"
+    down_tooltip = "Click to move track down"
+    shuffle_tooltip = "Click to shuffle this section of playlist"
+    button = [
+    [sg.Button(">>", key=("add" + str(num)), tooltip=add_tooltip)],
+    [sg.Button("X", key=("rm" + str(num)), tooltip=rm_tooltip)],
+    [sg.Button("∧", key=("up" + str(num)), tooltip=up_tooltip)],
+    [sg.Button("∨", key=("dn" + str(num)), tooltip=down_tooltip)],
+    [sg.Button("Shuffle", key=("sh" + str(num)), tooltip=shuffle_tooltip)]
+    ]
+    return button
+
+
+def create_layout_item(num, lst, size=(40, 4.38)):
+    item = [sg.Column(create_buttons_set(num)), sg.Listbox(lst, key="pl"+str(num), size=size, select_mode="single")]
+    return item
+
+
 def main():
     folder = open_folder_dialog()
     print(folder)
