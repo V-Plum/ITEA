@@ -31,48 +31,22 @@ def main():
     down_tooltip = "Click to move track down"
     shuffle_tooltip = "Click to shuffle this section of playlist"
 
-    butt_lo1 = [
-        [sg.Button(">>", key="add1", tooltip=add_tooltip)],
-        [sg.Button("X", key="rm1", tooltip=rm_tooltip)],
-        [sg.Button("∧", key="up1", tooltip=up_tooltip)],
-        [sg.Button("∨", key="dn1", tooltip=down_tooltip)],
-        [sg.Button("Shuffle", key="sh1", tooltip=shuffle_tooltip)]
-    ]
-    butt_lo2 = [
-        [sg.Button(">>", key="add2", tooltip=add_tooltip)],
-        [sg.Button("X", key="rm2", tooltip=rm_tooltip)],
-        [sg.Button("∧", key="up2", tooltip=up_tooltip)],
-        [sg.Button("∨", key="dn2", tooltip=down_tooltip)],
-        [sg.Button("Shuffle", key="sh2", tooltip=shuffle_tooltip)]
-    ]
-    butt_lo3 = [
-        [sg.Button(">>", key="add3", tooltip=add_tooltip)],
-        [sg.Button("X", key="rm3", tooltip=rm_tooltip)],
-        [sg.Button("∧", key="up3", tooltip=up_tooltip)],
-        [sg.Button("∨", key="dn3", tooltip=down_tooltip)],
-        [sg.Button("Shuffle", key="sh3", tooltip=shuffle_tooltip)]
-    ]
-    butt_lo4 = [
-        [sg.Button(">>", key="add4", tooltip=add_tooltip)],
-        [sg.Button("X", key="rm4", tooltip=rm_tooltip)],
-        [sg.Button("∧", key="up4", tooltip=up_tooltip)],
-        [sg.Button("∨", key="dn4", tooltip=down_tooltip)],
-        [sg.Button("Shuffle", key="sh4", tooltip=shuffle_tooltip)]
-    ]
-    butt_lo5 = [
-        [sg.Button(">>", key="add5", tooltip=add_tooltip)],
-        [sg.Button("X", key="rm5", tooltip=rm_tooltip)],
-        [sg.Button("∧", key="up5", tooltip=up_tooltip)],
-        [sg.Button("∨", key="dn5", tooltip=down_tooltip)],
-        [sg.Button("Shuffle", key="sh5", tooltip=shuffle_tooltip)]
-    ]
+    namespace = globals()
+    for i in range(1, 6):
+        namespace['butt_lo%d' % i] = [
+            [sg.Button(">>", key=("add"+str(i)), tooltip=add_tooltip)],
+            [sg.Button("X", key=("rm"+str(i)), tooltip=rm_tooltip)],
+            [sg.Button("∧", key=("up"+str(i)), tooltip=up_tooltip)],
+            [sg.Button("∨", key=("dn"+str(i)), tooltip=down_tooltip)],
+            [sg.Button("Shuffle", key=("sh"+str(i)), tooltip=shuffle_tooltip)]
+        ]
 
     playlists_layout = [
         [sg.Column(butt_lo1), sg.Listbox(pl1, key='pl1', size=(40, 4.38), select_mode="single")],
-        [sg.Column(butt_lo2), sg.Listbox(pl2, key='pl2', size=(40, 4.38), select_mode="multiple")],
-        [sg.Column(butt_lo3), sg.Listbox(pl3, key='pl3', size=(40, 4.38), select_mode="multiple")],
-        [sg.Column(butt_lo4), sg.Listbox(pl4, key='pl4', size=(40, 4.38), select_mode="multiple")],
-        [sg.Column(butt_lo5), sg.Listbox(pl5, key='pl5', size=(40, 4.38), select_mode="multiple")],
+        [sg.Column(butt_lo2), sg.Listbox(pl2, key='pl2', size=(40, 4.38), select_mode="single")],
+        [sg.Column(butt_lo3), sg.Listbox(pl3, key='pl3', size=(40, 4.38), select_mode="single")],
+        [sg.Column(butt_lo4), sg.Listbox(pl4, key='pl4', size=(40, 4.38), select_mode="single")],
+        [sg.Column(butt_lo5), sg.Listbox(pl5, key='pl5', size=(40, 4.38), select_mode="single")],
         [sg.Text(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.",
                  key="pld")]
     ]
@@ -221,7 +195,6 @@ def main():
             if index < len(pl1)-1:
                 pl1[index], pl1[index+1] = pl1[index+1], pl1[index]
                 window['pl1'].update(pl1)
-
 
         # Shuffle items in playlist sections:
 
