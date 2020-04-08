@@ -1,3 +1,13 @@
+"""
+This program requires Tkinter and PySimpleGUIQt to run, because of used GUI
+
+To install Tkinter use your terminal and enter:
+$ sudo apt-get install python3-tk
+
+To install PySimpleGUIQt use your terminal and enter:
+$ pip install PySimpleGUI
+"""
+
 import PySimpleGUIQt as sg
 from pg_tools import pg_actions
 from pg_tools import pg_ui
@@ -56,6 +66,11 @@ def main():
         if event is None or event == "Exit":
             exit()
 
+        # Open About Window
+
+        elif event == "About":
+            pg_ui.about_window()
+
         # Add files from a source folder
 
         elif event == "Add Folder":
@@ -76,6 +91,8 @@ def main():
                 src_dur += files_list[key][0]
             window['-LIST-'].update(file_names)
             window['td'].update(f"Total files duration: {src_dur // 60} min. {src_dur - (src_dur // 60) * 60} sec.")
+
+        # Add single file
 
         elif event == "Add File":
             src = pg_ui.open_file_dialog(path)

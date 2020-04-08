@@ -29,11 +29,11 @@ def create_buttons_set(num):
     down_tooltip = "Click to move track down"
     shuffle_tooltip = "Click to shuffle this section of playlist"
     button = [
-    [sg.Button(">>", key=("add" + str(num)), tooltip=add_tooltip)],
-    [sg.Button("X", key=("rm" + str(num)), tooltip=rm_tooltip)],
-    [sg.Button("∧", key=("up" + str(num)), tooltip=up_tooltip)],
-    [sg.Button("∨", key=("dn" + str(num)), tooltip=down_tooltip)],
-    [sg.Button("Shuffle", key=("sh" + str(num)), tooltip=shuffle_tooltip)]
+        [sg.Button(">>", key=("add" + str(num)), tooltip=add_tooltip)],
+        [sg.Button("X", key=("rm" + str(num)), tooltip=rm_tooltip)],
+        [sg.Button("∧", key=("up" + str(num)), tooltip=up_tooltip)],
+        [sg.Button("∨", key=("dn" + str(num)), tooltip=down_tooltip)],
+        [sg.Button("Shuffle", key=("sh" + str(num)), tooltip=shuffle_tooltip)]
     ]
     return button
 
@@ -43,9 +43,13 @@ def create_layout_item(num, lst, size=(40, 4.38)):
     return item
 
 
+def about_window():
+    # Simple popup instead of window is temporary
+    sg.popup("Playlist Generator v0.1\nby Vadym Slyva\n2020")
+
+
 def main():
-    folder = open_folder_dialog()
-    print(folder)
+    pass
 
 
 if __name__ == '__main__':

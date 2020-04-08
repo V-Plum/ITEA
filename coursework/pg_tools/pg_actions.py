@@ -35,7 +35,7 @@ def load_state():
         with open("settings.json", "r") as f:
             settings = json.load(f)
     else:
-        settings = dict({"path": ".", "pl1": [], "pl2": [], "pl3": [], "pl4": [], "pl5": []})
+        settings = dict({"path": "./temp", "pl1": [], "pl2": [], "pl3": [], "pl4": [], "pl5": []})
     path = settings["path"]
     if os.path.isfile("files.json"):
         with open("files.json", "r") as f:
@@ -114,8 +114,8 @@ def calculate_playlist_duration(working_list_of_files, pl1, pl2, pl3, pl4, pl5):
     return duration
 
 
-def remove_from_pls(delete_files, pl1, pl2, pl3, pl4, pl5):
-    for file in delete_files:
+def remove_from_pls(del_files, pl1, pl2, pl3, pl4, pl5):
+    for file in del_files:
         for i in range(len(pl1)):
             if file in pl1:
                 pl1.remove(file)
