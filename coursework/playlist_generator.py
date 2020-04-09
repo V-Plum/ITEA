@@ -121,79 +121,26 @@ def main():
         # It removes FIRST track with selected name from the section,
         # because .GetIndexes() method temporary doesn't work with PySimpleGUIQt
 
-        elif event == "rm1" and values["pl1"]:
-            track = values["pl1"][0]
-            if track:
-                pl1.remove(track)
-            pl_dur -= files_list[track][0]
-            window['pl1'].update(pl1)
-            window['pld'].update(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.")
-        elif event == "rm2" and values["pl2"]:
-            track = values["pl2"][0]
-            if track:
-                pl2.remove(track)
-            pl_dur -= files_list[track][0]
-            window['pl2'].update(pl2)
-            window['pld'].update(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.")
-        elif event == "rm3" and values["pl3"]:
-            track = values["pl3"][0]
-            if track:
-                pl3.remove(track)
-            pl_dur -= files_list[track][0]
-            window['pl3'].update(pl3)
-            window['pld'].update(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.")
-        elif event == "rm4" and values["pl4"]:
-            track = values["pl4"][0]
-            if track:
-                pl4.remove(track)
-            pl_dur -= files_list[track][0]
-            window['pl4'].update(pl4)
-            window['pld'].update(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.")
-        elif event == "rm5" and values["pl5"]:
-            track = values["pl5"][0]
-            if track:
-                pl5.remove(track)
-            pl_dur -= files_list[track][0]
-            window['pl5'].update(pl5)
-            window['pld'].update(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.")
+        elif event in ("rm1", "rm2", "rm3", "rm4", "rm5"):
+            pl_num = "pl" + str(event[-1])
+            if values[pl_num]:
+                track = values[pl_num][0]
+                if track:
+                    locals()[pl_num].remove(track)
+                pl_dur -= files_list[track][0]
+                window[pl_num].update(locals()[pl_num])
+                window['pld'].update(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.")
 
         # Add items to playlist sections:
-
-        elif event == "add1" and values['-LIST-']:
-            tracks = values['-LIST-']
-            for track in tracks:
-                pl1.append(track)
-                pl_dur += files_list[track][0]
-            window['pl1'].update(pl1)
-            window['pld'].update(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.")
-        elif event == "add2" and values['-LIST-']:
-            tracks = values['-LIST-']
-            for track in tracks:
-                pl2.append(track)
-                pl_dur += files_list[track][0]
-            window['pl2'].update(pl2)
-            window['pld'].update(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.")
-        elif event == "add3" and values['-LIST-']:
-            tracks = values['-LIST-']
-            for track in tracks:
-                pl3.append(track)
-                pl_dur += files_list[track][0]
-            window['pl3'].update(pl3)
-            window['pld'].update(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.")
-        elif event == "add4" and values['-LIST-']:
-            tracks = values['-LIST-']
-            for track in tracks:
-                pl4.append(track)
-                pl_dur += files_list[track][0]
-            window['pl4'].update(pl4)
-            window['pld'].update(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.")
-        elif event == "add5" and values['-LIST-']:
-            tracks = values['-LIST-']
-            for track in tracks:
-                pl5.append(track)
-                pl_dur += files_list[track][0]
-            window['pl5'].update(pl5)
-            window['pld'].update(f"Playlist duration: {pl_dur//60} min. {pl_dur-(pl_dur//60)*60} sec.")
+        elif event in ("add1", "add2", "add3", "add4", "add5"):
+            if values['-LIST-']:
+                pl_num = "pl" + str(event[-1])
+                tracks = values['-LIST-']
+                for track in tracks:
+                    locals()[pl_num].append(track)
+                    pl_dur += files_list[track][0]
+                window[pl_num].update(locals()[pl_num])
+                window['pld'].update(f"Playlist duration: {pl_dur // 60} min. {pl_dur - (pl_dur // 60) * 60} sec.")
 
         # Buttons UP and DOWN temporary doesn't work because of issue in .GetIndexes method in GUI framework
 
@@ -211,21 +158,10 @@ def main():
 
         # Shuffle items in playlist sections:
 
-        elif event == "sh1":
-            random.shuffle(pl1)
-            window['pl1'].update(pl1)
-        elif event == "sh2":
-            random.shuffle(pl2)
-            window['pl2'].update(pl2)
-        elif event == "sh3":
-            random.shuffle(pl3)
-            window['pl3'].update(pl3)
-        elif event == "sh4":
-            random.shuffle(pl4)
-            window['pl4'].update(pl4)
-        elif event == "sh5":
-            random.shuffle(pl5)
-            window['pl5'].update(pl5)
+        elif event in ("sh1", "sh2", "sh3", "sh4", "sh5"):
+            pl_num = "pl" + str(event[-1])
+            random.shuffle(locals()[pl_num])
+            window[pl_num].update(locals()[pl_num])
 
         # Remove items from source section, optionally delete files:
         elif event == "Delete Files" and not values['-LIST-']:
