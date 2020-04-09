@@ -7,8 +7,8 @@ $ sudo apt-get install python3-tk
 To install PySimpleGUIQt use your terminal and enter:
 $ pip install PySimpleGUI
 """
-
-import PySimpleGUIQt as sg
+# import PySimpleGUI  # Old Style GUI. More stable and functional, but ugly
+from pg_tools import PySimpleGUIQt_my as sg  # Newer Qt-based GUI, mostly compatible with old one, but buggy
 from pg_tools import pg_actions
 from pg_tools import pg_ui
 import random
@@ -32,7 +32,7 @@ def main():
     menu_def = [['&Help', ['&About']]]
 
     all_files_layout = [
-        [sg.Listbox(file_names, enable_events=False, key='-LIST-', size=(40, 22), select_mode="multiple")],
+        [sg.Listbox(file_names, enable_events=False, key='-LIST-', size=(40, 22), select_mode="extended")],
         [sg.Text(f"Total files duration: {src_dur//60} min. {src_dur-(src_dur//60)*60} sec.",
                  key="td")]
     ]
@@ -143,18 +143,27 @@ def main():
                 window['pld'].update(f"Playlist duration: {pl_dur // 60} min. {pl_dur - (pl_dur // 60) * 60} sec.")
 
         # Buttons UP and DOWN temporary doesn't work because of issue in .GetIndexes method in GUI framework
+        # Update: buttons UP and DOWN work with modified PySimpleGUIQt with .GetIndexes method added
 
-        elif event == "up1" and len(values['pl1']):
-            index = window["pl1"].GetIndexes()[0]
-            if index > 0:
-                pl1[index], pl1[index-1] = pl1[index-1], pl1[index]
-                window['pl1'].update(pl1)
+        # Move item UP in playlist section to sort manually. DOES NOT WORK WITH STANDARD PySimpleGUIQt
+        elif event in ("up1", "up2", "up3", "up4", "up5"):
+            pl_num = "pl" + str(event[-1])
+            if values[pl_num]:
+                index = window[pl_num].GetIndexes()[0]
+                if index > 0:
+                    locals()[pl_num][index], locals()[pl_num][index - 1] = locals()[pl_num][index - 1],\
+                                                                           locals()[pl_num][index]
+                    window[pl_num].update(locals()[pl_num])
 
-        elif event == "dn1" and len(values['pl1']):
-            index = window["pl1"].GetIndexes()[0]
-            if index < len(pl1)-1:
-                pl1[index], pl1[index+1] = pl1[index+1], pl1[index]
-                window['pl1'].update(pl1)
+        # Move item DOWN in playlist section to sort manually. DOES NOT WORK WITH STANDARD PySimpleGUIQt
+        elif event in ("dn1", "dn2", "dn3", "dn4", "dn5"):
+            pl_num = "pl" + str(event[-1])
+            if values[pl_num]:
+                index = window[pl_num].GetIndexes()[0]
+                if index < len(locals()[pl_num])-1:
+                    locals()[pl_num][index], locals()[pl_num][index+1] = locals()[pl_num][index+1],\
+                                                                         locals()[pl_num][index]
+                    window[pl_num].update(locals()[pl_num])
 
         # Shuffle items in playlist sections:
 

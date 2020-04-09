@@ -1,4 +1,5 @@
-import PySimpleGUIQt as sg
+# import PySimpleGUIQt as sg
+from pg_tools import PySimpleGUIQt_my as sg
 
 
 def open_folder_dialog(prompt, path):
