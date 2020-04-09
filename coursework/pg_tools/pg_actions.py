@@ -136,6 +136,8 @@ def remove_from_pls(del_files, pl1, pl2, pl3, pl4, pl5):
 
 def create_playlist(list_of_files, path="./temp"):
     # https://en.wikipedia.org/wiki/M3U
+    if not os.path.isdir(path):
+        os.mkdir(path)
     full_path = os.path.join(path, "playlist.m3u")
     with open(full_path, "w") as f:
         f.write('\n'.join(list_of_files))
