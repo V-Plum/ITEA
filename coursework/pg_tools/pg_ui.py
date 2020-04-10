@@ -1,4 +1,4 @@
-# import PySimpleGUIQt as sg
+# import PySimpleGUI  # Old Style GUI. More stable and functional, but ugly
 from pg_tools import PySimpleGUIQt_my as sg
 
 

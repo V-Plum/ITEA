@@ -59,6 +59,7 @@ def load_files_from_dir(src, destination="./temp/"):
             shutil.copy(full_file_name, destination)
             audio = MP3(full_file_name)
             file_length = audio.info.length
+            # Two None values added to each file for future purposes (set priority, add comment etc.)
             new_files_list[file_name] = [int(file_length), None, None]
     if len(new_files_list) == 0:
         print("No mp3 files found")

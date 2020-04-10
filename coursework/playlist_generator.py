@@ -1,11 +1,21 @@
 """
 This program requires Tkinter and PySimpleGUIQt to run, because of used GUI
+Mutagen module required to work with MP3 files
 
 To install Tkinter use your terminal and enter:
 $ sudo apt-get install python3-tk
 
 To install PySimpleGUIQt use your terminal and enter:
 $ pip install PySimpleGUI
+
+To install Mutagen use your terminal and enter:
+$ pip install mutagen to work with mp3 files
+
+Modified PySimpleGUIQt_my module is added to this program package to support GetIndexes() method,
+but default PySimpleGUIQt have to be installed as well to have all required additional libraries
+
+To switch from PySimpleGUIQt to PySimpleGUI uncomment first line of code and comment second one in this file
+and in pg_ui.py file
 """
 # import PySimpleGUI  # Old Style GUI. More stable and functional, but ugly
 from pg_tools import PySimpleGUIQt_my as sg  # Newer Qt-based GUI, mostly compatible with old one, but buggy
