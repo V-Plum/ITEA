@@ -9,17 +9,10 @@ from mutagen.mp3 import MP3
 
 
 def main():
-    settings, working_list_of_files, missing_files = load_state()
-    src = "/home/plum/Downloads/src/"
-    destination = settings["path"]
-    if len(missing_files) > 0:
-        print(f"{len(missing_files)} file(s) were renamed, deleted or moved since last run")
-    save_state(working_list_of_files, settings)
-    working_list_of_files = load_files_from_dir(src, destination)
-    save_state(working_list_of_files, settings)
-    # create_playlist(working_list_of_files, settings["path"])
+    pass
 
 
+# Save settings, playlist sections and list of working files
 def save_state(working_list_of_files, settings):
     with open("settings.json", "w") as f:
         settings = json.dumps(settings)
@@ -29,6 +22,7 @@ def save_state(working_list_of_files, settings):
         f.write(working_list_of_files)
 
 
+# Load settings, playlist sections and list of working files
 def load_state():
     missing_files = list()
     if os.path.isfile("settings.json"):
@@ -53,6 +47,7 @@ def load_state():
     return settings, files, missing_files
 
 
+# Set working path, copy all MP3 files from source folder to working folder and add files into GUI
 def load_files_from_dir(src, destination="./temp/"):
     if not os.path.isdir(destination):
         os.mkdir(destination)
@@ -70,6 +65,7 @@ def load_files_from_dir(src, destination="./temp/"):
     return new_files_list
 
 
+# Copy single MP3 file from source folder to working folder and add files into GUI
 def load_single_file(src, destination="./temp/"):
     # path = os.path.dirname(src)
     if not os.path.isdir(destination):
@@ -88,6 +84,7 @@ def load_single_file(src, destination="./temp/"):
         print("You can copy mp3 files only")
 
 
+# Remove files from GUI panel and (by default) delete from working folder
 def delete_files(working_list_of_files, files_to_delete, path=".", delete_file=True):
     for file in files_to_delete:
         if file in working_list_of_files.keys():
@@ -99,6 +96,7 @@ def delete_files(working_list_of_files, files_to_delete, path=".", delete_file=T
     return working_list_of_files
 
 
+# Calculate duration of all tracks in all playlist sections
 def calculate_playlist_duration(working_list_of_files, pl1, pl2, pl3, pl4, pl5):
     duration = 0
     for track in pl1:
@@ -114,6 +112,7 @@ def calculate_playlist_duration(working_list_of_files, pl1, pl2, pl3, pl4, pl5):
     return duration
 
 
+# Remove track rom all playlist sections
 def remove_from_pls(del_files, pl1, pl2, pl3, pl4, pl5):
     for file in del_files:
         for i in range(len(pl1)):
@@ -134,6 +133,7 @@ def remove_from_pls(del_files, pl1, pl2, pl3, pl4, pl5):
     return pl1, pl2, pl3, pl4, pl5
 
 
+# Generate playlist.m3u file from all working playlist sections. Save to temp folder if no path received
 def create_playlist(list_of_files, path="./temp"):
     # https://en.wikipedia.org/wiki/M3U
     if not os.path.isdir(path):

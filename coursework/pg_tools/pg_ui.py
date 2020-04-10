@@ -23,6 +23,7 @@ def open_file_dialog(path):
     return file
 
 
+# Create set of buttons to work with playlist section
 def create_buttons_set(num):
     add_tooltip = "Click to add selected tracks from left panel"
     rm_tooltip = "Click to remove selected track from this section of playlist"
@@ -39,6 +40,7 @@ def create_buttons_set(num):
     return button
 
 
+# Create playlist section, including buttons and listbox
 def create_layout_item(num, lst, size=(40, 4.38)):
     item = [sg.Column(create_buttons_set(num)), sg.Listbox(lst, key="pl"+str(num), size=size, select_mode="single")]
     return item
