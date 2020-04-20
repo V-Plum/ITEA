@@ -139,6 +139,25 @@ def confirm(prompt):
             print("\a\nWrong answer!\n")
 
 
+def get_text(prompt, min_len=0, is_exit=True):
+    while True:
+        if is_exit:
+            text = input(f"{prompt}, or press Enter to exit: ")
+        else:
+            text = input(prompt)
+        if is_exit and not text:
+            answer = confirm("Are you sure you want to exit? ")
+            if answer:
+                exit()
+            else:
+                continue
+        if min_len > 0 and len(text) < min_len:
+            print(f"Minimum {min_len} characters allowed")
+            continue
+        else:
+            return text
+
+
 # example to run selector function
 # a, b = selector(["First option", "Second option", "Third option"], "Select your option")
 # print(a, b)
